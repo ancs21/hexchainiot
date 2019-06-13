@@ -1,7 +1,7 @@
 require('dotenv').config()
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
-const HexchainIOTClient = require('../client-processor')
+const { HexchainIOTClient } = require('../client-processor')
 
 exports.device_token = (req, res, next) => {
   const deviceId = req.body.deviceId
@@ -12,7 +12,7 @@ exports.device_token = (req, res, next) => {
   }
 
   const isDeviceExists = fs.existsSync(
-    `${process.cwd()}\\store_key\\${deviceId}.pub`
+    `${process.cwd()}/store_key/${deviceId}.pub`
   )
   if (!isDeviceExists) {
     return res.status(401).json({

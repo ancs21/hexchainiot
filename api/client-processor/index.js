@@ -29,12 +29,12 @@ class HexchainIOTClient {
 
   getUserPriKey(deviceId) {
     const userprivkeyfile = `${deviceId}.priv`
-    return fs.readFileSync(userprivkeyfile)
+    return fs.readFileSync(`${process.cwd()}/store_key/${userprivkeyfile}`)
   }
 
   getUserPubKey(deviceId) {
     const userpubkeyfile = `${deviceId}.pub`
-    return fs.readFileSync(userpubkeyfile)
+    return fs.readFileSync(`${process.cwd()}/store_key/${userpubkeyfile}`)
   }
 
   sendRequest(payload) {

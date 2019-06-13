@@ -97,7 +97,7 @@ const deltasHandle = (block, changes) => {
           }
         }
       )
-      .then(res => console.log(res.data.block_num))
+      .then(res => console.log(res.data.data.insert_blocks))
       .catch(err => console.log(err.message))
   })
 }

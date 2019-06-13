@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
     req.device_data = decoded
 
     const isDeviceExists = fs.existsSync(
-      `${process.cwd()}\\store_key\\${req.device_data.deviceId}.pub`
+      `${process.cwd()}/store_key/${req.device_data.deviceId}.pub`
     )
 
     if (isDeviceExists) {
