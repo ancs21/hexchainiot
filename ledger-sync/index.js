@@ -16,7 +16,7 @@ const {
 
 const PREFIX = process.env.PREFIX
 const NULL_BLOCK_ID = '0000000000000000'
-const VALIDATOR_URL = process.env.VALIDATOR_URL
+const VALIDATOR_URL = `tcp://${process.env.HOSTNAME}:4004`
 const stream = new Stream(VALIDATOR_URL)
 
 // Parse Block Commit Event

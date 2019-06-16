@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hasura
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    certmanager.k8s.io/acme-challenge-type: http01
+
+spec:
+  tls:
+    - hosts:
+        - graphql-api.hexchain.xyz
+      secretName: k8s-stack-graphql-api-app-tls
+  rules:
+    - host: graphql-api.hexchain.xyz
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: hasura
+              servicePort: 80

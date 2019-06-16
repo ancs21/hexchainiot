@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: xxx3
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/issuer: letsencrypt-prod
+    certmanager.k8s.io/acme-challenge-type: http01
+
+spec:
+  tls:
+    - hosts:
+        - xxx3.hexchain.xyz
+      secretName: k8s-stack-xxx3-app-tls
+  rules:
+    - host: xxx3.hexchain.xyz
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: xxx3
+              servicePort: 80

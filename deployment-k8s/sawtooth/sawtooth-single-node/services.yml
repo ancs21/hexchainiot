@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: singlenode2
+spec:
+  selector:
+    app: singlenode2
+  ports:
+    - port: 8008
+      protocol: TCP
+      targetPort: 8008
