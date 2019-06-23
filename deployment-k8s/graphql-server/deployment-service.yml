@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hasura
+  name: graphql-server
 spec:
   selector:
     matchLabels:
-      app: hasura
+      app: graphql-server
   template:
     metadata:
       labels:
-        app: hasura
+        app: graphql-server
     spec:
       containers:
         - name: hasura
@@ -19,12 +19,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: dburl
-                  name: hasura
+                  name: graphql-server
             - name: HASURA_GRAPHQL_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: accessKey
-                  name: hasura
+                  name: graphql-server
             - name: HASURA_GRAPHQL_ENABLE_CONSOLE
               value: 'true'
             - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
@@ -35,10 +35,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hasura
+  name: graphql-server
 spec:
   selector:
-    app: hasura
+    app: graphql-server
   ports:
     - port: 80
       targetPort: 8080

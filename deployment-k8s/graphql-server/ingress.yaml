@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hasura
+  name: graphql-server
   annotations:
     kubernetes.io/ingress.class: nginx
     certmanager.k8s.io/issuer: letsencrypt-prod
@@ -18,5 +18,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: hasura
+              serviceName: graphql-server
               servicePort: 80

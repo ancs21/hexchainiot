@@ -16,7 +16,7 @@ spec:
             - bash
           args:
             - -c
-            - "devmode-engine-rust -C tcp://$HOSTNAME:5050"
+            - 'devmode-engine-rust -C tcp://$HOSTNAME:5050'
 
         - name: sawtooth-settings-tp
           image: hyperledger/sawtooth-settings-tp:1.1
@@ -24,7 +24,7 @@ spec:
             - bash
           args:
             - -c
-            - "settings-tp -vv -C tcp://$HOSTNAME:4004"
+            - 'settings-tp -vv -C tcp://$HOSTNAME:4004'
 
         - name: sawtooth-intkey-tp-python
           image: hyperledger/sawtooth-intkey-tp-python:1.1
@@ -32,7 +32,7 @@ spec:
             - bash
           args:
             - -c
-            - "intkey-tp-python -vv -C tcp://$HOSTNAME:4004"
+            - 'intkey-tp-python -vv -C tcp://$HOSTNAME:4004'
 
         - name: sawtooth-validator
           image: hyperledger/sawtooth-validator:1.1
@@ -48,19 +48,19 @@ spec:
           args:
             - -c
             - "sawadm keygen \
-            && sawtooth keygen my_key \
-            && sawset genesis -k /root/.sawtooth/keys/my_key.priv \
-            && sawset proposal create \
+              && sawtooth keygen my_key \
+              && sawset genesis -k /root/.sawtooth/keys/my_key.priv \
+              && sawset proposal create \
               -k /root/.sawtooth/keys/my_key.priv \
               sawtooth.consensus.algorithm.name=Devmode \
               sawtooth.consensus.algorithm.version=0.1 \
               -o config.batch \
-            && sawadm genesis config-genesis.batch config.batch \
-            && sawtooth-validator -vv \
-                --endpoint tcp://$SAWTOOTH_0_SERVICE_HOST:8800 \
-                --bind component:tcp://eth0:4004 \
-                --bind consensus:tcp://eth0:5050 \
-                --bind network:tcp://eth0:8800"
+              && sawadm genesis config-genesis.batch config.batch \
+              && sawtooth-validator -vv \
+              --endpoint tcp://$SAWTOOTH_0_SERVICE_HOST:8800 \
+              --bind component:tcp://eth0:4004 \
+              --bind consensus:tcp://eth0:5050 \
+              --bind network:tcp://eth0:8800"
 
         - name: sawtooth-rest-api
           image: hyperledger/sawtooth-rest-api:1.1
@@ -71,7 +71,7 @@ spec:
             - bash
           args:
             - -c
-            - "sawtooth-rest-api -C tcp://$HOSTNAME:4004" --bind 0.0.0.0:8008'
+            - 'sawtooth-rest-api -C tcp://$HOSTNAME:4004 --bind 0.0.0.0:8008'
 
         - name: sawtooth-shell
           image: hyperledger/sawtooth-shell:1.1
@@ -79,7 +79,7 @@ spec:
             - bash
           args:
             - -c
-            - "sawtooth keygen && tail -f /dev/null"
+            - 'sawtooth keygen && tail -f /dev/null'
 
         - name: hexchainiot-tp
           image: ancs21/hexchainiot-tp:0.0.1
