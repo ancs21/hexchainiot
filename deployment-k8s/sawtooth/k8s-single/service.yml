@@ -1,0 +1,25 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: sawtooth-0
+spec:
+  type: ClusterIP
+  selector:
+    name: sawtooth-0
+  ports:
+    - name: '4004'
+      protocol: TCP
+      port: 4004
+      targetPort: 4004
+    - name: '5050'
+      protocol: TCP
+      port: 5050
+      targetPort: 5050
+    - name: '8008'
+      protocol: TCP
+      port: 8008
+      targetPort: 8008
+    - name: '8800'
+      protocol: TCP
+      port: 8800
+      targetPort: 8800

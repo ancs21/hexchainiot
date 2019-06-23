@@ -29,13 +29,6 @@ spec:
               value: 'true'
             - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
               value: 'false'
-          resources:
-            limits:
-              memory: '256Mi'
-              cpu: '500m'
-            requests:
-              memory: '128Mi'
-              cpu: '50m'
           ports:
             - containerPort: 8080
 ---
