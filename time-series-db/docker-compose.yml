@@ -1,0 +1,26 @@
+version: '2'
+services:
+  timescale:
+    image: timescale/timescaledb:latest-pg10
+    environment:
+      POSTGRES_PASSWORD: postgrespassword
+    volumes:
+      - db_data_1111:/var/lib/postgresql/data
+  graphql-engine:
+    image: hasura/graphql-engine
+    ports:
+      - '8085:8080'
+    depends_on:
+      - 'timescale'
+    restart: always
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@timescale:5432/postgres
+      HASURA_GRAPHQL_ACCESS_KEY: mylongsecretkey
+      HASURA_GRAPHQL_AUTH_HOOK: http://147.75.105.231:6677/firebase/webhook
+    command:
+      - graphql-engine
+      - serve
+      - --enable-console
+
+volumes:
+  db_data_1111:

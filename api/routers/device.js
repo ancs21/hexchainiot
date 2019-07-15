@@ -6,5 +6,6 @@ const checkDevice = require('../middleware/checkDevice')
 
 router.post('/token', DeviceController.device_token)
 router.post('/send', [checkDevice], DeviceController.send_data)
+router.post('/send_raw_data', DeviceController.send_raw_data)
 
 module.exports = router
