@@ -29,12 +29,12 @@ class HexchainIOTClient {
 
   getUserPriKey(deviceId) {
     const userprivkeyfile = `${deviceId}.priv`
-    return fs.readFileSync(`${process.cwd()}/store_key/${userprivkeyfile}`)
+    return fs.readFileSync(`/root/.sawtooth/keys/${userprivkeyfile}`)
   }
 
   getUserPubKey(deviceId) {
     const userpubkeyfile = `${deviceId}.pub`
-    return fs.readFileSync(`${process.cwd()}/store_key/${userpubkeyfile}`)
+    return fs.readFileSync(`/root/.sawtooth/keys/${userpubkeyfile}`)
   }
 
   sendRequest(payload) {

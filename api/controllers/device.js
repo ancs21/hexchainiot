@@ -1,11 +1,35 @@
 require('dotenv').config()
-const fs = require('fs')
+
 const jwt = require('jsonwebtoken')
 const contentType = require('content-type')
 const getRawBody = require('raw-body')
 const queryString = require('query-string')
+const url = require('url')
+const uuid = require('uuid')
 
 const { HexchainIOTClient } = require('../client-processor')
+const { execShell, isDeviceExists } = require('../utils')
+
+exports.create_key = async (req, res) => {
+  try {
+    // generate unique id
+    const deviceId = uuid()
+
+    // create private and public key secure
+    await execShell(`sawtooth keygen ${deviceId}`)
+
+    // get address of devive on blockchain
+    const hexchain = new HexchainIOTClient(deviceId)
+    // return deviceId
+    res.json({
+      message: 'Successful',
+      deviceId,
+      address_blockchain: hexchain.address
+    })
+  } catch (error) {
+    res.status(401).json({ error })
+  }
+}
 
 exports.device_token = (req, res, next) => {
   const deviceId = req.body.deviceId
@@ -15,10 +39,7 @@ exports.device_token = (req, res, next) => {
     })
   }
 
-  const isDeviceExists = fs.existsSync(
-    `${process.cwd()}/store_key/${deviceId}.pub`
-  )
-  if (!isDeviceExists) {
+  if (!isDeviceExists(deviceId)) {
     return res.status(401).json({
       message: 'Device is not exists'
     })
@@ -37,7 +58,7 @@ exports.device_token = (req, res, next) => {
   })
 }
 
-exports.send_data = async (req, res, next) => {
+exports.send_data = async (req, res) => {
   const deviceId = req.device_data.deviceId
   const data = req.body.data
   console.log(data)
@@ -76,11 +97,7 @@ exports.send_raw_data = async (req, res, next) => {
         const token = req_json.token
         const decoded = jwt.verify(token, process.env.JWT_SERECT)
 
-        const isDeviceExists = fs.existsSync(
-          `${process.cwd()}/store_key/${decoded.deviceId}.pub`
-        )
-
-        if (isDeviceExists) {
+        if (isDeviceExists(decoded.deviceId)) {
           delete req_json['token']
           const hexchain = new HexchainIOTClient(decoded.deviceId)
           const payload = {
@@ -109,4 +126,42 @@ exports.send_raw_data = async (req, res, next) => {
       }
     }
   )
+}
+
+exports.send_raw = async (req, res, next) => {
+  let url_parts = url.parse(req.url, true)
+  let req_json = url_parts.query
+
+  console.log(req_json)
+  try {
+    const token = req_json.token
+    const decoded = jwt.verify(token, process.env.JWT_SERECT)
+
+    if (isDeviceExists(decoded.deviceId)) {
+      delete req_json['token']
+      const hexchain = new HexchainIOTClient(decoded.deviceId)
+      const payload = {
+        action: 'set',
+        data: JSON.stringify({
+          timestamp: +new Date(),
+          ...req_json
+        })
+      }
+
+      hexchain.sendRequest(payload)
+
+      return res.status(200).json({
+        message: 'Successful',
+        ...req_json
+      })
+    } else {
+      return res.status(401).json({
+        message: 'Device is not exists'
+      })
+    }
+  } catch (error) {
+    return res.status(401).json({
+      message: 'Device auth failed'
+    })
+  }
 }

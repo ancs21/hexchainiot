@@ -8,11 +8,7 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SERECT)
     req.device_data = decoded
 
-    const isDeviceExists = fs.existsSync(
-      `${process.cwd()}/store_key/${req.device_data.deviceId}.pub`
-    )
-
-    if (isDeviceExists) {
+    if (decoded.deviceId(req.device_data.deviceId)) {
       next()
     } else {
       return res.status(401).json({
