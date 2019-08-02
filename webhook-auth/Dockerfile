@@ -1,5 +1,3 @@
-# https://nodejs.org/de/docs/guides/nodejs-docker-webapp/
-
 FROM node:10-alpine
 
 WORKDIR /usr/src/app
