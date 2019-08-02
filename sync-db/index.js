@@ -3,7 +3,7 @@ require('dotenv').config()
 const deepstream = require('deepstream.io-client-js')
 const axios = require('axios')
 const moment = require('moment-timezone')
-
+const gql = require('graphql-tag')
 const ds = deepstream('ws://35.247.190.52:6020/deepstream', {
   silentDeprecation: true
 })
@@ -29,31 +29,31 @@ ds.event.subscribe(
       .post(
         process.env.GRAPHQL_URL,
         {
-          query: `
-      mutation insert_blocks(
-        $address: String
-        $block_id: String
-        $block_num: Int
-        $state_root_hash: String
-        $time: timestamptz
-        $value: jsonb
-      ) {
-        insert_blocks(
-          objects: {
-            block_num: $block_num
-            block_id: $block_id
-            address: $address
-            time: $time
-            value: $value
-            state_root_hash: $state_root_hash
-          }
-        ) {
-          returning {
-            block_num
-          }
-        }
-      }
-    `,
+          query: gql`
+            mutation insert_blocks(
+              $address: String
+              $block_id: String
+              $block_num: Int
+              $state_root_hash: String
+              $time: timestamptz
+              $value: jsonb
+            ) {
+              insert_blocks(
+                objects: {
+                  block_num: $block_num
+                  block_id: $block_id
+                  address: $address
+                  time: $time
+                  value: $value
+                  state_root_hash: $state_root_hash
+                }
+              ) {
+                returning {
+                  block_num
+                }
+              }
+            }
+          `,
           variables: {
             block_num: parseInt(eventData.block_num),
             block_id: eventData.block_id,

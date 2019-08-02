@@ -1,0 +1,34 @@
+{
+  "name": "with-styletron",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@react-google-maps/api": "^1.3.0",
+    "apollo-boost": "^0.4.3",
+    "apollo-link-context": "^1.0.18",
+    "apollo-link-ws": "^1.0.18",
+    "baseui": "^8.3.0",
+    "deepstream.io-client-js": "^2.3.3",
+    "firebase": "^6.2.4",
+    "formik": "^1.5.7",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
+    "next": "^9.0.0",
+    "next-with-apollo": "^3.4.0",
+    "react": "^16.8.6",
+    "react-apollo": "^2.5.8",
+    "react-dom": "^16.8.6",
+    "recharts": "^1.6.2",
+    "styletron-engine-atomic": "^1.1.2",
+    "styletron-react": "^5.0.1",
+    "subscriptions-transport-ws": "^0.9.16",
+    "yup": "^0.27.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.0.0"
+  }
+}
