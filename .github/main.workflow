@@ -23,7 +23,7 @@ action "Push hexchainiot/hexchain-app" {
 action "build hexchainiot/device-api " {
   uses = "actions/docker/cli@86ff551d26008267bb89ac11198ba7f1d807b699"
   needs = ["Docker Registry"]
-  args = "build hexchainiot/device-api device-api/."
+  args = "build -t hexchainiot/device-api device-api/."
 }
 
 action "push hexchainiot/device-api" {
