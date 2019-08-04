@@ -16,20 +16,33 @@ ds.login(
   function(success, data) {
     //success == true
     //data == { themeColor: 'pink' }
-    console.log(data)
+    // console.log(data)
   }
 )
 
 ds.event.subscribe(
-  'data/fc3c28982d4de5180ec771362c42de871c48cc8000aceeffcc53e88c6848cf643a6154',
+  'data/fc3c2880dcd4974b84c89e963aa499fa9a6745760562b1a3345b145c6593d566654b22',
   function(eventData) {
     console.log(eventData)
+    console.log(
+      JSON.stringify({
+        block_num: parseInt(eventData.block_num),
+        block_id: eventData.block_id,
+        state_root_hash: eventData.state_root_hash,
+        address: eventData.address,
+        time: moment
+          .unix(eventData.value.timestamp)
+          .tz('Asia/Ho_Chi_Minh')
+          .format('YYYY-MM-DD HH:mm:ssZ'),
 
+        value: eventData.value
+      })
+    )
     axios
       .post(
         process.env.GRAPHQL_URL,
         {
-          query: gql`
+          query: `
             mutation insert_blocks(
               $address: String
               $block_id: String

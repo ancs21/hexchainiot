@@ -143,7 +143,7 @@ exports.send_raw = async (req, res) => {
       const payload = {
         action: 'set',
         data: JSON.stringify({
-          timestamp: new Date().toISOString(),
+          timestamp: +new Date(),
           ...req_json
         })
       }

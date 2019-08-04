@@ -76,6 +76,7 @@ const deltasHandle = (block, changes) => {
       address: change.address,
       value: JSON.parse(Buffer.from(change.value).toString())
     }
+    console.log(data)
     ds.event.emit(`data/${change.address}`, data)
   })
 }
