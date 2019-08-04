@@ -4,7 +4,7 @@ const deepstream = require('deepstream.io-client-js')
 const axios = require('axios')
 const moment = require('moment-timezone')
 const gql = require('graphql-tag')
-const ds = deepstream('ws://35.247.190.52:6020/deepstream', {
+const ds = deepstream(process.env.DEEPSTREAM_URL, {
   silentDeprecation: true
 })
 

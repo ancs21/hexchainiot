@@ -3,12 +3,9 @@ FROM node:10-alpine
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
-
-RUN npm install -g yarn 
-RUN yarn
-
+RUN npm install
 COPY . .
+
 EXPOSE 6677
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "run", "start" ]

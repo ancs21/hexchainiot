@@ -10,7 +10,7 @@ const uuid = require('uuid')
 const { HexchainIOTClient } = require('../client-processor')
 const { execShell, isDeviceExists } = require('../utils')
 
-exports.create_key = async (req, res) => {
+exports.create_key = async (_, res) => {
   try {
     // generate unique id
     const deviceId = uuid()
@@ -31,7 +31,7 @@ exports.create_key = async (req, res) => {
   }
 }
 
-exports.device_token = (req, res, next) => {
+exports.device_token = (req, res) => {
   const deviceId = req.body.deviceId
   if (!deviceId) {
     return res.status(401).json({
@@ -128,7 +128,7 @@ exports.send_raw_data = async (req, res, next) => {
   )
 }
 
-exports.send_raw = async (req, res, next) => {
+exports.send_raw = async (req, res) => {
   let url_parts = url.parse(req.url, true)
   let req_json = url_parts.query
 
@@ -143,7 +143,7 @@ exports.send_raw = async (req, res, next) => {
       const payload = {
         action: 'set',
         data: JSON.stringify({
-          timestamp: +new Date(),
+          timestamp: new Date().toISOString(),
           ...req_json
         })
       }
