@@ -71,7 +71,7 @@ const data = [
 
 const deepstream = require('deepstream.io-client-js')
 
-const ds = deepstream('ws://35.187.229.143:6020/deepstream', {
+const ds = deepstream('ws://35.247.179.21:6020/deepstream', {
   silentDeprecation: true
 })
 
