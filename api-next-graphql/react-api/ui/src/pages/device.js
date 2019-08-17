@@ -10,6 +10,10 @@ import AppBar from '@material-ui/core/AppBar'
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
+import Popper from '@material-ui/core/Popper'
+import Paper from '@material-ui/core/Paper'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { DEVICE_BY_ID } from '../shared/graphq'
@@ -94,6 +98,15 @@ function Device(props) {
     setMobileOpen(!mobileOpen)
   }
 
+  const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const handleClick = event => {
+    setAnchorEl(prev => (prev ? null : event.currentTarget))
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? 'no-transition-popper' : undefined
+
   const { loading, error, data } = useQuery(DEVICE_BY_ID, {
     variables: {
       deviceId: props.id
@@ -103,6 +116,7 @@ function Device(props) {
   if (error) return <p>{error.message}</p>
 
   const deviceById = data ? data.deviceById : null
+  const snippet = data ? data.deviceSendData : null
   if (!deviceById) return <p>No device exist</p>
 
   return (
@@ -119,9 +133,34 @@ function Device(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            {deviceById.name}
-          </Typography>
+          <Box display="flex">
+            <Typography variant="h6">{deviceById.name}</Typography>
+            <div style={{ marginLeft: '50px' }}>
+              <Button
+                aria-describedby={id}
+                variant="contained"
+                color="default"
+                onClick={handleClick}
+              >
+                Lấy snippet
+              </Button>
+              <Popper
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                style={{ zIndex: 12345 }}
+              >
+                <Paper>
+                  <Typography
+                    className={classes.typography}
+                    style={{ width: '400px' }}
+                  >
+                    {snippet}
+                  </Typography>
+                </Paper>
+              </Popper>
+            </div>
+          </Box>
         </Toolbar>
       </AppBar>
 

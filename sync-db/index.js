@@ -21,7 +21,7 @@ ds.login(
 )
 
 ds.event.subscribe(
-  'data/fc3c2880dcd4974b84c89e963aa499fa9a6745760562b1a3345b145c6593d566654b22',
+  'data/fc3c28d6774ce63bd5973ffb5c0efc1a04d1558f253cbf129f34c6288201ec82205d4d',
   function(eventData) {
     console.log(eventData)
     console.log(

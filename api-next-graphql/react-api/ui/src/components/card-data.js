@@ -28,7 +28,11 @@ export default ({ deviceById }) => {
         <Card>
           <CardContent>
             <Typography gutterBottom>Cảm biến Nhiệt độ</Typography>
-            <Typography variant="h3" component="h2">
+            <Typography
+              variant="h3"
+              component="h2"
+              style={{ fontSize: '2.2rem' }}
+            >
               <img width="48" alt="icon" src="/static/icons/temp.png" />{' '}
               {dataRes.temp}{' '}
               <Typography variant="button" component="span">
@@ -52,7 +56,11 @@ export default ({ deviceById }) => {
         <Card>
           <CardContent>
             <Typography gutterBottom>Cảm biến pH</Typography>
-            <Typography variant="h3" component="h2">
+            <Typography
+              variant="h3"
+              component="h2"
+              style={{ fontSize: '2.2rem' }}
+            >
               <img width="48" alt="icon" src="/static/icons/ph-meter.png" />{' '}
               {dataRes.ph}
             </Typography>
@@ -73,7 +81,11 @@ export default ({ deviceById }) => {
         <Card>
           <CardContent>
             <Typography gutterBottom>Cảm biến Oxy hòa tan</Typography>
-            <Typography variant="h3" component="h2">
+            <Typography
+              variant="h3"
+              component="h2"
+              style={{ fontSize: '2.2rem' }}
+            >
               <img width="48" alt="icon" src="/static/icons/oxygen.png" />{' '}
               {dataRes.oxy}{' '}
               <Typography variant="button" component="span">
@@ -97,7 +109,11 @@ export default ({ deviceById }) => {
         <Card>
           <CardContent>
             <Typography gutterBottom>Dung lượng Pin</Typography>
-            <Typography variant="h3" component="h2">
+            <Typography
+              variant="h3"
+              component="h2"
+              style={{ fontSize: '2.2rem' }}
+            >
               <img width="48" alt="icon" src="/static/icons/battery.png" />{' '}
               {dataRes.pin}{' '}
               <Typography variant="button" component="span">

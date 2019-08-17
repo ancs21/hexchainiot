@@ -100,12 +100,13 @@ export default ({ deviceById }) => {
     }
   )
   if (loading) return <p>Loading...</p>
-  if (error) return <p>{error.message}</p>
+  if (error) return <p />
   const dataRes =
     data && data.historyDataOnBlockchainByAddress
       ? data.historyDataOnBlockchainByAddress
       : []
-  if (!dataRes.length) return <p>No data</p>
+
+  if (!dataRes.length) return <p />
 
   return (
     <>

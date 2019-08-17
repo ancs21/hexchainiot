@@ -41,6 +41,7 @@ export const DEVICE_BY_ID = gql`
       description
       address
     }
+    deviceSendData(deviceId: $deviceId)
   }
 `
 
