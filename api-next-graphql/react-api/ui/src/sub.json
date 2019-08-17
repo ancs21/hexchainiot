@@ -1,0 +1,12 @@
+{
+  "state_changes": [
+    {
+      "value": "eyJ0aW1lc3RhbXAiOjE1NjYwMTYyMjE2MzQsInRlbXAiOiIzMCIsInBpbiI6Ijk5Iiwib3h5IjoiMTAiLCJwaCI6IjcuMSJ9",
+      "address": "fc3c282cbedafd9312f91d5827a2eb3d7d4d81e4e89c6c973925150b90cf4589859e5a",
+      "type": "SET"
+    }
+  ],
+  "previous_block_id": "7206622bd1417f3b90c8feb52d437c899755ed962747e08d838589e79119acb82ef3b86af4d72f152356526fbccd7485ebb4e492b746cafaf15d824040f5e65e",
+  "block_id": "8b7373037632d27b76ea6e0fd6f84e616d4ff69bd0b9139573563578618a80501d1696049d95483a93f646b68737e08ca1ffbfd100d0ef39645217ae8d9843a1",
+  "block_num": "27"
+}
