@@ -1,23 +1,6 @@
 require('dotenv').config()
-
 const _ = require('lodash')
 const { Stream } = require('sawtooth-sdk/messaging/stream')
-const deepstream = require('deepstream.io-client-js')
-const ds = deepstream(process.env.WS_SERVER, {
-  silentDeprecation: true
-})
-ds.login(
-  {
-    username: 'spiderman',
-    password: 'farfromhome'
-  },
-  function(success, data) {
-    //success == true
-    //data == { themeColor: 'pink' }
-    console.log(success)
-  }
-)
-
 const {
   Message,
   EventList,
@@ -27,9 +10,12 @@ const {
   ClientEventsSubscribeRequest,
   ClientEventsSubscribeResponse
 } = require('sawtooth-sdk/protobuf')
-
 const PREFIX = process.env.PREFIX
 const NULL_BLOCK_ID = '0000000000000000'
+const fetch = require('isomorphic-fetch')
+const Redis = require('ioredis')
+
+const redis = new Redis(process.env.REDIS_URL)
 const stream = new Stream(process.env.VALIDATOR_URL)
 
 // Parse Block Commit Event
@@ -68,7 +54,7 @@ const handleEvent = msg => {
 }
 
 const deltasHandle = (block, changes) => {
-  _.partition(changes, change => {
+  _.partition(changes, async change => {
     const data = {
       block_num: parseInt(block.block_num),
       block_id: block.block_id,
@@ -76,8 +62,27 @@ const deltasHandle = (block, changes) => {
       address: change.address,
       value: JSON.parse(Buffer.from(change.value).toString())
     }
-    console.log(data)
-    ds.event.emit(`data/${change.address}`, data)
+
+    const blockInfo = await fetch(
+      `${process.env.HEXCHAIN_REST_API}/blocks/${data.block_id}`
+    )
+    const dataRes = await blockInfo.json()
+    const batches = dataRes.data.batches
+
+    batches.map(async item => {
+      const address = item.transactions[0].header.inputs[0]
+      const trans_id = item.transactions[0].header_signature
+      await redis
+        .multi()
+        .zadd(`devices:transactions:${address}`, data.value.timestamp, trans_id)
+        .xadd(
+          'blocks_stream',
+          '*',
+          'data',
+          JSON.stringify({ address, trans_id, value: data.value })
+        )
+        .exec()
+    })
   })
 }
 
@@ -102,8 +107,7 @@ const subscribe = () => {
       Message.MessageType.CLIENT_EVENTS_SUBSCRIBE_REQUEST,
       ClientEventsSubscribeRequest.encode({
         lastKnownBlockIds: [NULL_BLOCK_ID],
-        // subscriptions: [blockSub, deltaSub]
-        subscriptions: [deltaSub]
+        subscriptions: [blockSub, deltaSub]
       }).finish()
     )
     .then(response => ClientEventsSubscribeResponse.decode(response))

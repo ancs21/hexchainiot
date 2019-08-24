@@ -37,6 +37,7 @@ services:
       --bind network:tcp://eth0:8800 \
       --bind consensus:tcp://eth0:5050 \
       \""
+
   devmode-engine:
     image: hyperledger/sawtooth-devmode-engine-rust:1.1
     container_name: sawtooth-devmode-engine-rust-default
@@ -66,60 +67,12 @@ services:
       tail -f /dev/null \
       \""
 
-  # # graphql server
-  # timescale:
-  #   image: timescale/timescaledb:latest-pg10
-  #   container_name: timescaledb
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTGRES_PASSWORD: Iaminevitable
-  #   volumes:
-  #     - db_data_1111:/var/lib/postgresql/data
-  # grafana:
-  #   image: grafana/grafana:5.1.0
-  #   container_name: grafana
-  #   ports:
-  #     - 3003:3000
-  #   depends_on:
-  #     - 'timescale'
-
-  # webhookauth:
-  #   image: hexchainiot/webhook-auth
-  #   container_name: webhook-auth
-  #   restart: unless-stopped
-
-  # graphql-engine:
-  #   image: hasura/graphql-engine
-  #   container_name: graphql-server
-  #   ports:
-  #     - '8085:8080'
-  #   depends_on:
-  #     - 'timescale'
-  #     - 'webhookauth'
-  #   restart: unless-stopped
-  #   environment:
-  #     HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:Iaminevitable@timescale:5432/postgres
-  #     HASURA_GRAPHQL_ACCESS_KEY: Iamironman
-  #     HASURA_GRAPHQL_AUTH_HOOK: http://webhookauth:6677/firebase/webhook
-  #   command:
-  #     - graphql-engine
-  #     - serve
-  #     - --enable-console
-
-  # custom blockchain
   hexchain-tp:
     image: hexchainiot/tp
     container_name: hexchainiot-tp
     restart: unless-stopped
     depends_on:
       - 'validator'
-
-  # hexchain-ledger-sync:
-  #   image: hexchainiot/ledger-pub
-  #   container_name: hexchainiot-ledger-pub
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - 'validator'
 
   device-api:
     image: hexchainiot/device-api
@@ -129,22 +82,6 @@ services:
       - '8888:8888'
     depends_on:
       - rest-api
-
-  # pub/sub
-  # deepstream:
-  #   image: deepstreamio/deepstream.io:3.2.1
-  #   container_name: deepstream
-  #   restart: unless-stopped
-  #   ports:
-  #     - '6020:6020'
-  #     - '6021:6021'
-  #   volumes:
-  #     - ./conf:/etc/deepstream/
-  # sync db
-  # sync-db:
-  #   image: hexchainiot/sync-db
-  #   container_name: sync-db
-  #   restart: unless-stopped
 
 volumes:
   db_data_1111:

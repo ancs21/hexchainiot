@@ -1,17 +1,12 @@
-# https://nodejs.org/de/docs/guides/nodejs-docker-webapp/
+FROM node:10-alpine
 
-FROM node:10.15.3
-
-# Create app directory
 WORKDIR /usr/src/app
-
+RUN apk --no-cache add --virtual builds-deps build-base python
 COPY package.json ./
-COPY yarn.lock ./
+RUN npm i
+RUN apk del builds-deps build-base python
 
-RUN npm install -g yarn 
-RUN yarn
-
-# Bundle app source
 COPY . .
+ENV NODE_ENV production
 
-CMD [ "yarn", "start" ]
+CMD [ "node", "index.js" ]

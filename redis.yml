@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  redis:
+    image: redis:5-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_PASSWORD=Iamironman
+    volumes:
+      - redis-data:/data
+    entrypoint: "/bin/sh -c 'redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}'"
+volumes:
+  redis-data:

@@ -80,8 +80,7 @@ class HexchainIOTClient {
 
     request.post(
       {
-        // url: 'http://localhost:8008/batches',
-        url: process.env.NETWORK_URL,
+        url: 'http://rest-api:8008/batches',
         body: batchListBytes,
         headers: { 'Content-Type': 'application/octet-stream' }
       },
