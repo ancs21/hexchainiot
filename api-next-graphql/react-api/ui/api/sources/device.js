@@ -1,9 +1,10 @@
+require('dotenv').config()
 const { RESTDataSource } = require('apollo-datasource-rest')
 
 class DeviceAPI extends RESTDataSource {
   constructor() {
     super()
-    this.baseURL = 'http://104.197.226.82:8888'
+    this.baseURL = process.env.HEXCHAIN_DEVICE_API
   }
 
   async createKey() {
