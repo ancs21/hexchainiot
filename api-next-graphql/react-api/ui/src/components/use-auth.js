@@ -43,10 +43,8 @@ function useProvideAuth() {
     const unsubscribe = firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         setUser(user)
-        localStorage.setItem(
-          'token',
-          await firebase.auth().currentUser.getIdToken(true)
-        )
+        const idToken = await firebase.auth().currentUser.getIdToken(true)
+        localStorage.setItem('token', idToken)
         setLoading(false)
       } else {
         setUser(false)

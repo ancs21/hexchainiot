@@ -4,12 +4,13 @@ const Redis = require('ioredis')
 const express = require('express')
 const isEmpty = require('lodash/isEmpty')
 const { ApolloServer, gql } = require('apollo-server-express')
+const subHours = require('date-fns/subHours')
 
 const admin = require('./utils/fb')
 const DeviceAPI = require('./sources/device')
 const BlockchainAPI = require('./sources/blockchain')
 
-const redis = new Redis()
+const redis = new Redis('redis://:Iamironman@35.240.145.241:6879/0')
 
 const typeDefs = gql`
   type Device {
@@ -37,6 +38,11 @@ const typeDefs = gql`
     stateByAddress(address: String): BlockchainStateAddress
     transactionsByAddress(address: String, last: Int): [String]
     historyDataOnBlockchainByAddress(address: String, last: Int): [SensorData]
+    historyByTimestamp(
+      address: String
+      startDate: String
+      endDate: String
+    ): [SensorData]
   }
   type Mutation {
     add_device(name: String, description: String): Device
@@ -86,11 +92,7 @@ const resolvers = {
       if (!userId) throw new Error('You need login')
       try {
         const result = await dataSources.deviceAPI.getDeviceToken(deviceId)
-        console.log(result)
-
-        return `http://104.197.226.82:8888/device/send_raw?temp=[temp]1&pin=[pin]&oxy=[oxy]&ph=[ph]&token=${
-          result.token
-        }`
+        return `http://35.240.145.241:8888/device/send_raw?temp=[temp]&pin=[pin]&oxy=[oxy]&ph=[ph]&token=${result.token}`
       } catch (error) {
         throw new Error(error)
       }
@@ -145,6 +147,43 @@ const resolvers = {
         )
         if (isEmpty(result)) {
           throw new Error('Device is not exist')
+        }
+        let data = []
+        const res = await dataSources.blockchainAPI.getDataFromReceipts(result)
+        if (result.length > 0) {
+          data = await Promise.all(
+            res.data.map(async item => {
+              const { state_changes } = item
+              return JSON.parse(atob(state_changes[0].value))
+            })
+          )
+        }
+
+        return data
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    historyByTimestamp: async (
+      _,
+      { address, startDate, endDate },
+      { userId, dataSources }
+    ) => {
+      if (!userId) throw new Error('You need login')
+      // start with default 6 hours ago
+      const startDateValue = startDate
+        ? startDate
+        : (+subHours(new Date(), 6)).toString()
+      // end
+      const endDateValue = endDate ? endDate : (+new Date()).toString()
+      try {
+        const result = await redis.zrangebyscore(
+          `devices:transactions:${address}`,
+          parseInt(startDateValue),
+          parseInt(endDateValue)
+        )
+        if (isEmpty(result)) {
+          throw new Error('Device is no data')
         }
         let data = []
         const res = await dataSources.blockchainAPI.getDataFromReceipts(result)
@@ -229,7 +268,6 @@ const server = new ApolloServer({
 
 const app = express()
 app.use(express.static(path.join(__dirname, 'build')))
-
 server.applyMiddleware({ app, path: '/graphql' })
 
 app.get('*', function(req, res) {

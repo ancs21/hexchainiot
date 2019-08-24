@@ -1,9 +1,10 @@
+require('dotenv').config()
 const { RESTDataSource } = require('apollo-datasource-rest')
 
 class BlockchainAPI extends RESTDataSource {
   constructor() {
     super()
-    this.baseURL = 'http://104.197.226.82:8008'
+    this.baseURL = process.env.HEXCHAIN_REST_API
   }
 
   async getStateByAddress(address) {

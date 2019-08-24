@@ -8,9 +8,10 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import { format } from 'date-fns'
+import subHours from 'date-fns/subHours'
 
 import { useQuery } from '@apollo/react-hooks'
-import { HISTORY_DATA_BLOCKCHAIN_BY_ADDRESS } from '../shared/graphq'
+import { HISTORY_BY_TIMESTAMP } from '../shared/graphq'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import ResponsiveContainer from 'recharts/lib/component/ResponsiveContainer'
 
@@ -84,28 +85,46 @@ const useStyles = makeStyles(theme => ({
     left: theme.spacing(2)
   }
 }))
+const dateCurrent = new Date()
 export default ({ deviceById }) => {
   const classes = useStyles()
   const theme = useTheme()
 
-  const [last, setLast] = React.useState(10)
-  const { loading, error, data } = useQuery(
-    HISTORY_DATA_BLOCKCHAIN_BY_ADDRESS,
-    {
-      variables: {
-        address: deviceById.address,
-        last: parseInt(last)
-      },
-      pollInterval: 1000
+  const [last, setLast] = React.useState('1h')
+  let toTimestamp = +subHours(dateCurrent, 1)
+  if (last === '1h') {
+    toTimestamp = +subHours(dateCurrent, 1)
+  } else if (last === '6h') {
+    toTimestamp = +subHours(dateCurrent, 6)
+  } else if (last === '12h') {
+    toTimestamp = +subHours(dateCurrent, 12)
+  } else if (last === '1d') {
+    toTimestamp = +subHours(dateCurrent, 24)
+  } else if (last === '2d') {
+    toTimestamp = +subHours(dateCurrent, 48)
+  } else if (last === '7d') {
+    toTimestamp = +subHours(dateCurrent, 168)
+  } else if (last === '14d') {
+    toTimestamp = +subHours(dateCurrent, 476)
+  } else if (last === '30d') {
+    toTimestamp = +subHours(dateCurrent, 720)
+  }
+  console.log(last, toTimestamp)
+  const { loading, error, data } = useQuery(HISTORY_BY_TIMESTAMP, {
+    variables: {
+      address: deviceById.address,
+      startDate: toTimestamp.toString()
+      // endDate: +new Date()
+      // last: parseInt(last)
     }
-  )
+    // pollInterval: 1000
+  })
   if (loading) return <p>Loading...</p>
+  console.log(error)
   if (error) return <p />
-  const dataRes =
-    data && data.historyDataOnBlockchainByAddress
-      ? data.historyDataOnBlockchainByAddress
-      : []
 
+  const dataRes = data && data.historyByTimestamp ? data.historyByTimestamp : []
+  console.log(dataRes)
   if (!dataRes.length) return <p />
 
   return (
@@ -119,9 +138,14 @@ export default ({ deviceById }) => {
               onChange={e => setLast(e.target.value)}
               input={<Input name="last" id="age-native-label-placeholder" />}
             >
-              <option value={10}>10 dữ liệu gần nhất</option>
-              <option value={30}>30 dữ liệu gần nhất</option>
-              <option value={60}>60 dữ liệu gần nhất</option>
+              <option value={'1h'}>1 giờ</option>
+              <option value={'6h'}>6 giờ</option>
+              <option value={'12h'}>12 giờ</option>
+              <option value={'1d'}>1 ngày</option>
+              <option value={'2d'}>2 ngày</option>
+              <option value={'7d'}>7 ngày</option>
+              <option value={'14d'}>14 ngày</option>
+              <option value={'30d'}>30 ngày</option>
             </NativeSelect>
             <FormHelperText>Chọn để truy vấn lịch sử</FormHelperText>
           </div>

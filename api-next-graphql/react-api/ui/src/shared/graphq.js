@@ -56,3 +56,23 @@ export const HISTORY_DATA_BLOCKCHAIN_BY_ADDRESS = gql`
     }
   }
 `
+
+export const HISTORY_BY_TIMESTAMP = gql`
+  query historyByTimestamp(
+    $address: String
+    $startDate: String
+    $endDate: String
+  ) {
+    historyByTimestamp(
+      address: $address
+      startDate: $startDate
+      endDate: $endDate
+    ) {
+      timestamp
+      temp
+      ph
+      pin
+      oxy
+    }
+  }
+`
