@@ -92,7 +92,9 @@ const resolvers = {
       if (!userId) throw new Error('You need login')
       try {
         const result = await dataSources.deviceAPI.getDeviceToken(deviceId)
-        return `http://35.240.145.241:8888/device/send_raw?temp=[temp]&pin=[pin]&oxy=[oxy]&ph=[ph]&token=${result.token}`
+        return `http://35.240.145.241:8888/device/send_raw?temp=[temp]&pin=[pin]&oxy=[oxy]&ph=[ph]&token=${
+          result.token
+        }`
       } catch (error) {
         throw new Error(error)
       }
@@ -267,11 +269,11 @@ const server = new ApolloServer({
 })
 
 const app = express()
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(path.join(__dirname, './build')))
 server.applyMiddleware({ app, path: '/graphql' })
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  res.sendFile(path.join(__dirname, './build', 'index.html'))
 })
 
 app.listen({ port: 4000 }, () =>
